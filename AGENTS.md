@@ -18,17 +18,22 @@ See `README.md` for schema and behavior details.
 ## Development commands
 
 ```bash
-python -m pip install -e '.[dev]'
-harness-doctor scan .
+uv sync --locked --extra dev
+uv run harness-doctor scan .
 ```
+
+If `uv` is unavailable, use `python -m pip install -e '.[dev]'` and run the same
+tools directly.
 
 ## Test commands
 
 ```bash
-pytest
-ruff check .
-ruff format --check .
-mypy
+uv run pytest
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy
+uv run python -m build
+uv run twine check dist/*
 ```
 
 ## Constraints
@@ -38,8 +43,17 @@ mypy
 - Never run destructive commands, Terraform apply, or external-service calls.
 - Never include detected secret values in evidence or logs.
 - Preserve schema compatibility within schema version 1.
+- New or changed checks require deterministic repository-scenario tests.
+- Evidence must use stable, repository-relative values where practical.
+- Do not publish packages, push release tags, or change repository visibility without explicit approval.
+
+## Releases
+
+Follow `docs/releasing.md`. Keep release credentials out of the repository and
+use PyPI Trusted Publishing.
 
 ## Definition of Done
 
-Editable installation succeeds; tests, lint, formatting, and type checks pass; `harness-doctor scan .` produces `.harness/report.yaml`; user-facing behavior is documented.
-
+Locked installation succeeds; tests, lint, formatting, type checks, package
+build, and wheel smoke tests pass; `harness-doctor scan .` produces a schema
+version 1 report; user-facing behavior is documented.

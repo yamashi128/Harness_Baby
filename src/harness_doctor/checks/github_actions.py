@@ -15,8 +15,13 @@ from harness_doctor.models import CheckResult, ScanContext, Status
 TEST_PATTERN = re.compile(r"\b(pytest|python\s+-m\s+unittest|unittest)\b", re.IGNORECASE)
 LINT_PATTERN = re.compile(r"\b(ruff|flake8|pylint|mypy|tflint)\b", re.IGNORECASE)
 TF_VALIDATE_PATTERN = re.compile(r"\bterraform\s+validate\b", re.IGNORECASE)
+OIDC_PERMISSION_PATTERN = re.compile(
+    r"^\s*id-token\s*:\s*(?:none|read|write)\s*(?:#.*)?$", re.IGNORECASE
+)
 ASSIGNMENT_PATTERN = re.compile(
-    r"(?i)\b(password|passwd|secret|token|api[_-]?key|access[_-]?key)\b\s*[:=]\s*['\"]?([^\s'\"#]+)"
+    r"(?i)(?<![A-Za-z0-9])(?:[A-Za-z0-9]+[_-])*"
+    r"(password|passwd|secret|token|api[_-]?key|access[_-]?key)"
+    r"\s*[:=]\s*['\"]?([^\s'\"#]+)"
 )
 TOKEN_PATTERNS = {
     "github_token": re.compile(r"\b(?:ghp|github_pat)_[A-Za-z0-9_]{20,}\b"),
@@ -55,6 +60,8 @@ def _secret_findings(paths: list[Path], context: ScanContext) -> list[dict[str, 
     findings: list[dict[str, Any]] = []
     for path in paths:
         for line_number, line in enumerate(read_text(path).splitlines(), start=1):
+            if OIDC_PERMISSION_PATTERN.match(line):
+                continue
             if "${{" in line and ("secrets." in line or "github.token" in line):
                 continue
             assignment = ASSIGNMENT_PATTERN.search(line)

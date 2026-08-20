@@ -131,7 +131,7 @@ def test_score_ignores_skips_and_supports_weights() -> None:
 
 
 def test_secret_finding_never_contains_secret_value(tmp_path: Path) -> None:
-    secret = "ghp_abcdefghijklmnopqrstuvwxyz123456"
+    secret = "synthetic-test-value"
     write(tmp_path, ".github/workflows/ci.yml", f"env:\n  API_TOKEN: {secret}\n")
     report = scan(tmp_path)
     security = report.checks["security"]
@@ -142,5 +142,15 @@ def test_secret_finding_never_contains_secret_value(tmp_path: Path) -> None:
 
 def test_secret_reference_is_safe(tmp_path: Path) -> None:
     write(tmp_path, ".github/workflows/ci.yml", "env:\n  API_TOKEN: ${{ secrets.API_TOKEN }}\n")
+    report = scan(tmp_path)
+    assert report.checks["security"]["status"] == "pass"
+
+
+def test_github_oidc_permission_is_not_a_secret(tmp_path: Path) -> None:
+    write(
+        tmp_path,
+        ".github/workflows/release.yml",
+        "permissions:\n  id-token: write # Required for trusted publishing\n",
+    )
     report = scan(tmp_path)
     assert report.checks["security"]["status"] == "pass"

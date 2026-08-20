@@ -1,33 +1,54 @@
 [build-system]
-requires = ["setuptools>=69"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "harness-doctor"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Deterministic repository readiness diagnostics for coding agents"
 readme = "README.md"
 requires-python = ">=3.12"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Harness Doctor contributors" }]
+keywords = ["ai-agents", "cli", "developer-tools", "repository", "static-analysis"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Quality Assurance",
+  "Typing :: Typed",
+]
 dependencies = ["PyYAML>=6.0,<7"]
 
 [project.optional-dependencies]
 dev = [
+  "build>=1.2,<2",
   "mypy>=1.11,<2",
   "pytest>=8.0,<9",
   "ruff>=0.6,<1",
+  "twine>=6.0,<7",
   "types-PyYAML>=6.0,<7",
 ]
 
 [project.scripts]
 harness-doctor = "harness_doctor.cli:main"
 
+[project.urls]
+Repository = "https://github.com/yamashi128/Harness_Doctor"
+Issues = "https://github.com/yamashi128/Harness_Doctor/issues"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
 harness_doctor = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = { attr = "harness_doctor.__version__" }
 
 [tool.pytest.ini_options]
 addopts = "-q"
