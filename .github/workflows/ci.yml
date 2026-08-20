@@ -53,8 +53,15 @@ jobs:
         run: |
           uv venv "$RUNNER_TEMP/harness-doctor-smoke" --python 3.12
           uv pip install --python "$RUNNER_TEMP/harness-doctor-smoke/bin/python" dist/*.whl
-          mkdir -p "$RUNNER_TEMP/example-repository"
+          "$RUNNER_TEMP/harness-doctor-smoke/bin/harness-doctor" init \
+            "$RUNNER_TEMP/example-repository" \
+            --project-name "Example Repository" \
+            --apply
           "$RUNNER_TEMP/harness-doctor-smoke/bin/harness-doctor" scan \
             "$RUNNER_TEMP/example-repository" \
             --output "$RUNNER_TEMP/report.yaml"
+          "$RUNNER_TEMP/harness-doctor-smoke/bin/harness-doctor" init \
+            "$RUNNER_TEMP/example-repository" \
+            --project-name "Example Repository" \
+            --apply
           test -s "$RUNNER_TEMP/report.yaml"

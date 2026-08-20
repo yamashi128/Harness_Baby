@@ -23,10 +23,12 @@ uv run python -m build
 uv run twine check dist/*
 ```
 
-Inspect the source archive and wheel under `dist/`. Confirm that they contain
-only the package, metadata, README, and license material expected for the
-release. Install the wheel into a clean Python 3.12 environment and run a scan
-outside the source checkout.
+Inspect the source archive and wheel under `dist/`. Confirm that the source archive
+contains the package, metadata, README, license, tests, and maintained Markdown
+documentation, while the wheel contains only runtime package and metadata material.
+Install the wheel into a clean Python 3.12 environment. Outside the source checkout,
+preview and apply a blank-folder bootstrap, scan the generated repository, and
+confirm that a second apply is unchanged.
 
 ## 2. Configure Trusted Publishing
 

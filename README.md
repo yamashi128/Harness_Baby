@@ -1,8 +1,15 @@
 # Harness Doctor
 
-Harness Doctor is a deterministic CLI that observes whether a repository gives an AI coding agent enough safe, repeatable feedback to work autonomously. It detects repository metadata, Python, Terraform, and GitHub Actions signals, then emits evidence-backed readiness checks and a machine-readable YAML report.
+Harness Doctor is a deterministic CLI that helps a repository become ready for safe,
+autonomous coding-agent work. It can preview and create a minimal harness in an
+empty directory, then observe repository metadata, Python, Terraform, and GitHub
+Actions signals through evidence-backed checks and a machine-readable YAML report.
 
-It is not an AI agent. It does not call an LLM, change source or configuration, install dependencies, run Terraform, contact external services, or generate fixes. The only repository write made by the default command is the requested `.harness/report.yaml` artifact.
+It is not an AI agent and never calls an LLM. `scan` does not change source or
+configuration, install dependencies, run Terraform, or contact external services;
+its only repository write is the requested `.harness/report.yaml` artifact. The
+separate `init --apply` command writes only its reviewed generic skeleton into an
+empty target.
 
 ## Install
 
@@ -25,6 +32,27 @@ pipx uninstall harness-doctor
 Until the first release is published, use the development installation below.
 
 ## Usage
+
+### Start from an empty folder
+
+Preview a generic, agent-neutral harness without writing anything:
+
+```bash
+harness-doctor init my-project --project-name "My Project"
+```
+
+Create the exact preview explicitly:
+
+```bash
+harness-doctor init my-project --project-name "My Project" --apply
+```
+
+The bootstrap creates seven context and feedback files. It does not invent source
+code, tests, CI, dependencies, a license, or an architecture. See
+[`docs/bootstrap.md`](docs/bootstrap.md) for the novice walkthrough and conflict
+behavior.
+
+### Check readiness
 
 Scan the current directory:
 
@@ -93,6 +121,12 @@ Terraform commands are never executed. `terraform_binary_available` describes th
 
 The score policy and YAML reporter are independent modules. YAML output preserves registry order and contains no timestamps, making repeated scans stable when repository and relevant tool availability are unchanged.
 
+`bootstrap.py` owns the generic template and separates deterministic planning from
+explicit application. It preflights every path before writing, refuses ownership
+ambiguity, and verifies the complete result after application. The maintained
+contract and stop conditions live in
+[`docs/specs/blank-folder-bootstrap.md`](docs/specs/blank-folder-bootstrap.md).
+
 ## Development
 
 The committed `uv.lock` is the reproducible development environment:
@@ -114,6 +148,12 @@ Release maintainers should follow [`docs/releasing.md`](docs/releasing.md).
 
 ## Roadmap
 
-After the MVP, likely additions are a versioned external plugin discovery contract, configurable check weights, optional report history, more robust workflow semantics, and support for Node.js, Go, Rust, Java, Docker, Kubernetes, and Ansible.
+After the generic bootstrap is proven, likely additions are a novice-friendly
+interactive flow, stack-specific templates, safe adoption into existing repositories,
+a versioned external plugin discovery contract, configurable check weights, optional
+report history, more robust workflow semantics, and support for Node.js, Go, Rust,
+Java, Docker, Kubernetes, and Ansible.
 
-Dynamic plugins, command execution, auto-fixes, historical reports, remote integrations, and exhaustive secret scanning are intentionally outside the MVP.
+Dynamic plugins, application-code generation, automatic remediation, external
+command execution, historical reports, remote integrations, and exhaustive secret
+scanning are intentionally outside the current scope.

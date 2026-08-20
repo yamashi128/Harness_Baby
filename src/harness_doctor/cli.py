@@ -8,6 +8,13 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from harness_doctor import __version__
+from harness_doctor.bootstrap import (
+    BootstrapConflictError,
+    BootstrapPlan,
+    BootstrapStatus,
+    apply_bootstrap,
+    plan_bootstrap,
+)
 from harness_doctor.models import ScanReport
 from harness_doctor.reporters.yaml_reporter import write_yaml
 from harness_doctor.scanner import Scanner
@@ -24,6 +31,19 @@ def build_parser() -> argparse.ArgumentParser:
         "-o",
         type=Path,
         help="report path (default: <repository>/.harness/report.yaml)",
+    )
+    init_parser = subparsers.add_parser(
+        "init", help="preview or create a minimal harness in an empty directory"
+    )
+    init_parser.add_argument("path", nargs="?", default=".", help="target path (default: .)")
+    init_parser.add_argument(
+        "--project-name",
+        help="project name (default: target directory name)",
+    )
+    init_parser.add_argument(
+        "--apply",
+        action="store_true",
+        help="create the planned files; preview is the default",
     )
     return parser
 
@@ -45,26 +65,79 @@ def render_summary(report: ScanReport, output_path: Path) -> str:
     return "\n".join(lines)
 
 
-def run(argv: Sequence[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
-    if args.command != "scan":
-        return 2
-    root = Path(args.path).expanduser().resolve()
-    output_path = args.output or root / ".harness" / "report.yaml"
+def render_bootstrap(plan: BootstrapPlan, applied: bool) -> str:
+    if plan.status is BootstrapStatus.UNCHANGED:
+        state = "UNCHANGED"
+        note = "The complete skeleton already matches; no files were rewritten."
+    elif applied:
+        state = "CREATED"
+        note = "Next: fill the TODOs, then run `harness-doctor scan .`."
+    else:
+        state = "PREVIEW"
+        note = "No files were written. Re-run with `--apply` to create this skeleton."
+    lines = [
+        "Harness skeleton",
+        "",
+        f"Target: {plan.target.as_posix()}",
+        f"Project: {plan.project_name}",
+        f"State: {state}",
+        "",
+        "Files:",
+    ]
+    lines.extend(f"  {item.relative_path}" for item in plan.files)
+    lines.extend(["", note])
+    return "\n".join(lines)
+
+
+def _run_scan(args: argparse.Namespace) -> int:
+    path = str(args.path)
+    requested_output = args.output
+    root = Path(path).expanduser().resolve()
+    output_path = requested_output or root / ".harness" / "report.yaml"
     if not output_path.is_absolute():
         output_path = Path.cwd() / output_path
-    try:
-        report = Scanner().scan(root)
-        write_yaml(report, output_path)
-    except (OSError, ValueError) as error:
-        print(f"harness-doctor: error: {error}", file=sys.stderr)
-        return 2
+    report = Scanner().scan(root)
+    write_yaml(report, output_path)
     try:
         shown_output = output_path.relative_to(Path.cwd())
     except ValueError:
         shown_output = output_path
     print(render_summary(report, shown_output))
     return 0
+
+
+def _run_init(args: argparse.Namespace) -> int:
+    path = str(args.path)
+    project_name = args.project_name
+    should_apply = bool(args.apply)
+    plan = plan_bootstrap(path, project_name)
+    if plan.status is BootstrapStatus.CONFLICT:
+        raise BootstrapConflictError(plan.conflicts)
+    if should_apply:
+        before = plan.status
+        plan = apply_bootstrap(path, project_name)
+        if before is BootstrapStatus.CREATE:
+            plan = BootstrapPlan(
+                plan.target,
+                plan.project_name,
+                plan.files,
+                BootstrapStatus.CREATE,
+            )
+    print(render_bootstrap(plan, should_apply))
+    return 0
+
+
+def run(argv: Sequence[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    try:
+        if args.command == "scan":
+            return _run_scan(args)
+        if args.command == "init":
+            return _run_init(args)
+        return 2
+    except (OSError, ValueError) as error:
+        print(f"harness-doctor: error: {error}", file=sys.stderr)
+        return 2
 
 
 def main() -> None:

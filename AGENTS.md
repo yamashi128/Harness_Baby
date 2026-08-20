@@ -2,11 +2,15 @@
 
 ## Project purpose
 
-Harness Doctor deterministically observes repository readiness for autonomous coding agents. It reports evidence and never edits the repository except for its requested report artifact.
+Harness Doctor creates a minimal harness in an empty directory and deterministically
+observes repository readiness for autonomous coding agents. `scan` reports evidence
+and never edits source or configuration; `init --apply` is the single explicit,
+bounded bootstrap mutation.
 
 ## Architecture map
 
 - `src/harness_doctor/scanner.py`: bounded file discovery and check orchestration
+- `src/harness_doctor/bootstrap.py`: preview-first generic skeleton planning and application
 - `src/harness_doctor/checks/`: side-effect-free, extensible checks
 - `src/harness_doctor/scoring.py`: score policy
 - `src/harness_doctor/reporters/`: serialization
@@ -40,6 +44,9 @@ uv run twine check dist/*
 
 - Python 3.12 or newer.
 - Checks must be deterministic, offline, and side-effect-free.
+- `scan` may only write its requested report artifact.
+- Bootstrap preview must never write; apply may create only the documented generic skeleton.
+- Bootstrap must never overwrite existing content or provide a force flag.
 - Never run destructive commands, Terraform apply, or external-service calls.
 - Never include detected secret values in evidence or logs.
 - Preserve schema compatibility within schema version 1.
@@ -54,6 +61,7 @@ use PyPI Trusted Publishing.
 
 ## Definition of Done
 
-Locked installation succeeds; tests, lint, formatting, type checks, package
-build, and wheel smoke tests pass; `harness-doctor scan .` produces a schema
-version 1 report; user-facing behavior is documented.
+Locked installation succeeds; tests, lint, formatting, type checks, package build,
+and wheel smoke tests pass. Bootstrap preview/apply/conflict/idempotence scenarios
+pass; a generated skeleton can be scanned into a schema version 1 report; user-facing
+behavior and mutation boundaries are documented.
