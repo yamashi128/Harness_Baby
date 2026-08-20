@@ -1,5 +1,10 @@
 # Start from an empty folder
 
+> **Warning:** Harness Baby is experimental alpha software. It does not guarantee
+> production readiness or safe unsupervised agent work. Review the preview, keep your
+> work under version control or backed up, verify generated content and scan findings,
+> and use the tool at your own risk.
+
 Harness Baby's generic bootstrap is for someone who has an idea but does not yet know
 how to structure repository context for coding agents. It creates a small,
 agent-neutral skeleton and leaves unknown facts as explained TODOs.

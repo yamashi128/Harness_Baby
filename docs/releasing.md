@@ -23,6 +23,10 @@ uv run python -m build
 uv run twine check dist/*
 ```
 
+Confirm that the README and CLI help identify the release as experimental alpha
+software, state that it is not a production-readiness guarantee, and tell users to
+review generated content and diagnostic results and use the tool at their own risk.
+
 Inspect the source archive and wheel under `dist/`. Confirm that the source archive
 contains the package, metadata, README, license, tests, and maintained Markdown
 documentation, while the wheel contains only runtime package and metadata material.
