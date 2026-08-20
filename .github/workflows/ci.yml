@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9 # v9.0.0
+        with:
+          enable-cache: true
+
+      - name: Install locked development environment
+        run: uv sync --locked --extra dev
+
+      - name: Run tests
+        run: uv run pytest
+
+      - name: Run lint
+        run: uv run ruff check .
+
+      - name: Check formatting
+        run: uv run ruff format --check .
+
+      - name: Run type checks
+        run: uv run mypy
+
+      - name: Build distributions
+        run: uv run python -m build
+
+      - name: Validate distribution metadata
+        run: uv run twine check dist/*
+
+      - name: Smoke test the built wheel outside the checkout
+        run: |
+          uv venv "$RUNNER_TEMP/harness-doctor-smoke" --python 3.12
+          uv pip install --python "$RUNNER_TEMP/harness-doctor-smoke/bin/python" dist/*.whl
+          mkdir -p "$RUNNER_TEMP/example-repository"
+          "$RUNNER_TEMP/harness-doctor-smoke/bin/harness-doctor" scan \
+            "$RUNNER_TEMP/example-repository" \
+            --output "$RUNNER_TEMP/report.yaml"
+          test -s "$RUNNER_TEMP/report.yaml"

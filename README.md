@@ -8,15 +8,21 @@ It is not an AI agent. It does not call an LLM, change source or configuration, 
 
 Python 3.12 or newer is required.
 
-```bash
-python -m pip install -e .
-```
-
-For development tools:
+After the first PyPI release, install the CLI in an isolated environment with
+[`pipx`](https://pipx.pypa.io/):
 
 ```bash
-python -m pip install -e '.[dev]'
+pipx install harness-doctor --python python3.12
 ```
+
+Upgrade or remove it with:
+
+```bash
+pipx upgrade harness-doctor
+pipx uninstall harness-doctor
+```
+
+Until the first release is published, use the development installation below.
 
 ## Usage
 
@@ -89,16 +95,25 @@ The score policy and YAML reporter are independent modules. YAML output preserve
 
 ## Development
 
+The committed `uv.lock` is the reproducible development environment:
+
 ```bash
-pytest
-ruff check .
-ruff format --check .
-mypy
+uv sync --locked --extra dev
+uv run pytest
+uv run ruff check .
+uv run ruff format --check .
+uv run mypy
+uv run python -m build
+uv run twine check dist/*
 ```
+
+Without `uv`, create a Python 3.12 virtual environment and run
+`python -m pip install -e '.[dev]'` before invoking the tools directly.
+
+Release maintainers should follow [`docs/releasing.md`](docs/releasing.md).
 
 ## Roadmap
 
 After the MVP, likely additions are a versioned external plugin discovery contract, configurable check weights, optional report history, more robust workflow semantics, and support for Node.js, Go, Rust, Java, Docker, Kubernetes, and Ansible.
 
 Dynamic plugins, command execution, auto-fixes, historical reports, remote integrations, and exhaustive secret scanning are intentionally outside the MVP.
-
