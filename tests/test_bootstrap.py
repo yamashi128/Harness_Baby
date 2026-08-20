@@ -5,13 +5,13 @@ from pathlib import Path
 import pytest
 import yaml
 
-from harness_doctor.bootstrap import (
+from harness_baby.bootstrap import (
     GENERATED_PATHS,
     BootstrapStatus,
     apply_bootstrap,
     plan_bootstrap,
 )
-from harness_doctor.cli import run
+from harness_baby.cli import run
 
 
 def test_init_previews_without_creating_target(tmp_path: Path, capsys) -> None:  # type: ignore[no-untyped-def]
@@ -52,6 +52,7 @@ def test_init_applies_generic_skeleton_to_missing_target(tmp_path: Path, capsys)
     assert manifest["template"] == {"id": "generic-agent-ready", "version": 1}
     assert manifest["project"]["name"] == "Example Project"
     assert manifest["generated_files"] == list(GENERATED_PATHS)
+    assert manifest["next_command"] == "harness-baby scan ."
     assert "State: CREATED" in capsys.readouterr().out
 
 

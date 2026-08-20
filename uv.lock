@@ -260,7 +260,7 @@ wheels = [
 ]
 
 [[package]]
-name = "harness-doctor"
+name = "harness-baby"
 source = { editable = "." }
 dependencies = [
     { name = "pyyaml" },

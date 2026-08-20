@@ -30,7 +30,7 @@ goal, action, observation, adjustment, and stop conditions durable and inspectab
 ## CLI contract
 
 ```bash
-harness-doctor init [PATH] [--project-name NAME] [--apply]
+harness-baby init [PATH] [--project-name NAME] [--apply]
 ```
 
 - `PATH` defaults to the current directory.
@@ -45,8 +45,8 @@ harness-doctor init [PATH] [--project-name NAME] [--apply]
 - Partial, modified, or unexpected content is a conflict. There is no force flag.
 - Errors use exit code 2 and do not disclose file contents.
 
-The public product and command name is still a branding decision. The current CLI
-name is retained internally until that decision is made.
+The public product name is Harness Baby, the PyPI distribution and CLI command are
+`harness-baby`, and the Python package is `harness_baby`.
 
 ## Generated skeleton
 

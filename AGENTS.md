@@ -2,19 +2,19 @@
 
 ## Project purpose
 
-Harness Doctor creates a minimal harness in an empty directory and deterministically
+Harness Baby creates a minimal harness in an empty directory and deterministically
 observes repository readiness for autonomous coding agents. `scan` reports evidence
 and never edits source or configuration; `init --apply` is the single explicit,
 bounded bootstrap mutation.
 
 ## Architecture map
 
-- `src/harness_doctor/scanner.py`: bounded file discovery and check orchestration
-- `src/harness_doctor/bootstrap.py`: preview-first generic skeleton planning and application
-- `src/harness_doctor/checks/`: side-effect-free, extensible checks
-- `src/harness_doctor/scoring.py`: score policy
-- `src/harness_doctor/reporters/`: serialization
-- `src/harness_doctor/cli.py`: CLI boundary
+- `src/harness_baby/scanner.py`: bounded file discovery and check orchestration
+- `src/harness_baby/bootstrap.py`: preview-first generic skeleton planning and application
+- `src/harness_baby/checks/`: side-effect-free, extensible checks
+- `src/harness_baby/scoring.py`: score policy
+- `src/harness_baby/reporters/`: serialization
+- `src/harness_baby/cli.py`: CLI boundary
 - `tests/`: isolated repository scenarios
 
 See `README.md` for schema and behavior details.
@@ -23,7 +23,7 @@ See `README.md` for schema and behavior details.
 
 ```bash
 uv sync --locked --extra dev
-uv run harness-doctor scan .
+uv run harness-baby scan .
 ```
 
 If `uv` is unavailable, use `python -m pip install -e '.[dev]'` and run the same

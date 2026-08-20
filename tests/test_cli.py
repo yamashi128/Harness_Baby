@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from harness_doctor.cli import run
+from harness_baby.cli import run
 
 
 def test_cli_writes_yaml_and_prints_summary(tmp_path: Path, capsys) -> None:  # type: ignore[no-untyped-def]
@@ -14,8 +14,9 @@ def test_cli_writes_yaml_and_prints_summary(tmp_path: Path, capsys) -> None:  # 
     data = yaml.safe_load(report_path.read_text(encoding="utf-8"))
     output = capsys.readouterr().out
     assert data["schema_version"] == 1
+    assert data["tool"]["name"] == "harness-baby"
     assert data["tool"]["version"] == "0.1.0"
-    assert "Harness Doctor" in output
+    assert "Harness Baby" in output
     assert "Score:" in output
 
 

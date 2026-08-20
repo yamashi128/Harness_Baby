@@ -6,11 +6,11 @@ import os
 from collections.abc import Sequence
 from pathlib import Path
 
-from harness_doctor import __version__
-from harness_doctor.checks import built_in_checks
-from harness_doctor.checks.base import Check
-from harness_doctor.models import ScanContext, ScanReport
-from harness_doctor.scoring import summarize
+from harness_baby import __version__
+from harness_baby.checks import built_in_checks
+from harness_baby.checks.base import Check
+from harness_baby.models import ScanContext, ScanReport
+from harness_baby.scoring import summarize
 
 IGNORED_DIRECTORIES = {
     ".git",
@@ -80,7 +80,7 @@ class Scanner:
             raise ValueError("Check IDs must be unique")
         return ScanReport(
             schema_version=1,
-            tool={"name": "harness-doctor", "version": __version__},
+            tool={"name": "harness-baby", "version": __version__},
             project={"path": display_path, "detected_stacks": list(context.detected_stacks)},
             summary=summarize(results),
             checks={result.id: result.as_dict() for result in results},

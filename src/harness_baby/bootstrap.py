@@ -70,7 +70,7 @@ def _manifest(project_name: str) -> str:
         "template": {"id": TEMPLATE_ID, "version": TEMPLATE_VERSION},
         "project": {"name": project_name},
         "generated_files": list(GENERATED_PATHS),
-        "next_command": "harness-doctor scan .",
+        "next_command": "harness-baby scan .",
     }
     return yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
 
@@ -103,7 +103,7 @@ TODO: Describe what {project_name} does and who it serves.
 
 ## Commands
 
-- Readiness scan: `harness-doctor scan .`
+- Readiness scan: `harness-baby scan .`
 - Tests: TODO: Add the real test command.
 - Lint: TODO: Add the real lint command.
 - Format check: TODO: Add the real formatting command.
@@ -120,7 +120,7 @@ TODO: Describe what {project_name} does and who it serves.
 - The stated acceptance criteria are satisfied.
 - Documented verification commands pass.
 - Relevant documentation and decisions are current.
-- `harness-doctor scan .` has been reviewed; unresolved findings are explicit.
+- `harness-baby scan .` has been reviewed; unresolved findings are explicit.
 """,
         "README.md": f"""# {project_name}
 
@@ -138,7 +138,7 @@ without pretending that application code or engineering controls already exist.
 5. Run the readiness scan:
 
 ```bash
-harness-doctor scan .
+harness-baby scan .
 ```
 
 Review `.harness/report.yaml`, improve one evidenced gap at a time, and scan again.
@@ -222,7 +222,7 @@ Run only commands that are known to belong to this repository:
 - Tests: TODO
 - Lint: TODO
 - Format check: TODO
-- Readiness: `harness-doctor scan .`
+- Readiness: `harness-baby scan .`
 
 Record failures as evidence; do not hide or relabel them as success.
 

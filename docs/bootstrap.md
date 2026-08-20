@@ -1,22 +1,22 @@
 # Start from an empty folder
 
-The generic bootstrap is for someone who has an idea but does not yet know how to
-structure repository context for coding agents. It creates a small, agent-neutral
-skeleton and leaves unknown facts as explained TODOs.
+Harness Baby's generic bootstrap is for someone who has an idea but does not yet know
+how to structure repository context for coding agents. It creates a small,
+agent-neutral skeleton and leaves unknown facts as explained TODOs.
 
 ## 1. Preview
 
 The default mode never creates the target directory or writes files:
 
 ```bash
-harness-doctor init my-project
+harness-baby init my-project
 ```
 
 Review the seven planned paths. Use a display name when the folder name is not the
 right project name:
 
 ```bash
-harness-doctor init my-project --project-name "My Project"
+harness-baby init my-project --project-name "My Project"
 ```
 
 ## 2. Create the skeleton
@@ -24,7 +24,7 @@ harness-doctor init my-project --project-name "My Project"
 Apply the exact preview explicitly:
 
 ```bash
-harness-doctor init my-project --project-name "My Project" --apply
+harness-baby init my-project --project-name "My Project" --apply
 cd my-project
 ```
 
@@ -46,9 +46,10 @@ docs/work-loop.md
 ## 3. Add only known facts
 
 Start with the TODOs in `AGENTS.md`, `docs/architecture.md`, and
-`docs/work-loop.md`. Do not invent a test command, dependency, architecture, or CI
-system just to fill a slot. Add each command after the corresponding engineering
-control really exists.
+`docs/work-loop.md`. You can ask your preferred coding agent to help, but require it
+to distinguish repository evidence from suggestions. Do not invent a test command,
+dependency, architecture, or CI system just to fill a slot. Add each command after
+the corresponding engineering control really exists.
 
 Choose a license and initialize version control when appropriate:
 
@@ -62,7 +63,7 @@ the absence of repository metadata as unfinished work.
 ## 4. Observe and adjust
 
 ```bash
-harness-doctor scan .
+harness-baby scan .
 ```
 
 Read `.harness/report.yaml`, choose one evidenced gap, improve the repository, and

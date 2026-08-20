@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from harness_doctor.checks.base import Check
-from harness_doctor.checks.helpers import (
+from harness_baby.checks.base import Check
+from harness_baby.checks.helpers import (
     config_has_section,
     load_toml,
     nested_mapping,
@@ -13,7 +13,7 @@ from harness_doctor.checks.helpers import (
     read_text,
     requirement_names,
 )
-from harness_doctor.models import CheckResult, ScanContext, Status
+from harness_baby.models import CheckResult, ScanContext, Status
 
 
 def _python_metadata(context: ScanContext) -> dict[str, Any]:

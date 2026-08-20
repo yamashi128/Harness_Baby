@@ -1,4 +1,4 @@
-"""Command-line interface for Harness Doctor."""
+"""Command-line interface for Harness Baby."""
 
 from __future__ import annotations
 
@@ -7,21 +7,21 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from harness_doctor import __version__
-from harness_doctor.bootstrap import (
+from harness_baby import __version__
+from harness_baby.bootstrap import (
     BootstrapConflictError,
     BootstrapPlan,
     BootstrapStatus,
     apply_bootstrap,
     plan_bootstrap,
 )
-from harness_doctor.models import ScanReport
-from harness_doctor.reporters.yaml_reporter import write_yaml
-from harness_doctor.scanner import Scanner
+from harness_baby.models import ScanReport
+from harness_baby.reporters.yaml_reporter import write_yaml
+from harness_baby.scanner import Scanner
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="harness-doctor")
+    parser = argparse.ArgumentParser(prog="harness-baby")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
     scan_parser = subparsers.add_parser("scan", help="scan a repository without modifying it")
@@ -49,7 +49,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def render_summary(report: ScanReport, output_path: Path) -> str:
-    lines = ["Harness Doctor", ""]
+    lines = ["Harness Baby", ""]
     for check_id, check in report.checks.items():
         label = check_id.replace("_", " ").title()
         lines.append(f"{label:<18} {str(check['status']).upper()}")
@@ -71,7 +71,7 @@ def render_bootstrap(plan: BootstrapPlan, applied: bool) -> str:
         note = "The complete skeleton already matches; no files were rewritten."
     elif applied:
         state = "CREATED"
-        note = "Next: fill the TODOs, then run `harness-doctor scan .`."
+        note = "Next: fill the TODOs, then run `harness-baby scan .`."
     else:
         state = "PREVIEW"
         note = "No files were written. Re-run with `--apply` to create this skeleton."
@@ -136,7 +136,7 @@ def run(argv: Sequence[str] | None = None) -> int:
             return _run_init(args)
         return 2
     except (OSError, ValueError) as error:
-        print(f"harness-doctor: error: {error}", file=sys.stderr)
+        print(f"harness-baby: error: {error}", file=sys.stderr)
         return 2
 
 

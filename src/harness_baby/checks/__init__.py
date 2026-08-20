@@ -2,16 +2,16 @@
 
 from __future__ import annotations
 
-from harness_doctor.checks.base import Check
-from harness_doctor.checks.github_actions import GitHubActionsCheck, SecurityCheck
-from harness_doctor.checks.python import (
+from harness_baby.checks.base import Check
+from harness_baby.checks.github_actions import GitHubActionsCheck, SecurityCheck
+from harness_baby.checks.python import (
     FormattingCheck,
     LintingCheck,
     PythonTestingCheck,
     ReproducibilityCheck,
 )
-from harness_doctor.checks.repository import AgentContextCheck, DocumentationCheck, RepositoryCheck
-from harness_doctor.checks.terraform import TerraformValidationCheck
+from harness_baby.checks.repository import AgentContextCheck, DocumentationCheck, RepositoryCheck
+from harness_baby.checks.terraform import TerraformValidationCheck
 
 
 def built_in_checks() -> tuple[Check, ...]:

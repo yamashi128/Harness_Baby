@@ -1,4 +1,4 @@
-"""Small, bounded helpers used by checks."""
+"""Small, bounded helpers used by Harness Baby checks."""
 
 from __future__ import annotations
 
