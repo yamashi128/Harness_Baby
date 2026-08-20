@@ -8,7 +8,7 @@ from pathlib import Path
 
 import yaml
 
-from harness_doctor.models import ScanReport
+from harness_baby.models import ScanReport
 
 
 def render_yaml(report: ScanReport) -> str:

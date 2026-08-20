@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from harness_doctor.models import CheckResult, ScanContext
+from harness_baby.models import CheckResult, ScanContext
 
 
 class Check(ABC):

@@ -8,9 +8,9 @@ from typing import Any
 
 import yaml
 
-from harness_doctor.checks.base import Check
-from harness_doctor.checks.helpers import read_text
-from harness_doctor.models import CheckResult, ScanContext, Status
+from harness_baby.checks.base import Check
+from harness_baby.checks.helpers import read_text
+from harness_baby.models import CheckResult, ScanContext, Status
 
 TEST_PATTERN = re.compile(r"\b(pytest|python\s+-m\s+unittest|unittest)\b", re.IGNORECASE)
 LINT_PATTERN = re.compile(r"\b(ruff|flake8|pylint|mypy|tflint)\b", re.IGNORECASE)

@@ -1,8 +1,20 @@
-# Harness Doctor
+# Harness Baby
 
-Harness Doctor is a deterministic CLI that observes whether a repository gives an AI coding agent enough safe, repeatable feedback to work autonomously. It detects repository metadata, Python, Terraform, and GitHub Actions signals, then emits evidence-backed readiness checks and a machine-readable YAML report.
+Harness Baby is a deterministic CLI for people who want an AI coding agent to work
+safely but do not yet know what repository harness to build. It gives an empty folder
+the smallest honest starting structure, then scores readiness as you and your preferred
+coding agent fill in the real project details.
 
-It is not an AI agent. It does not call an LLM, change source or configuration, install dependencies, run Terraform, contact external services, or generate fixes. The only repository write made by the default command is the requested `.harness/report.yaml` artifact.
+You do not need to understand harness engineering before using it. Preview the starter
+skeleton, create it explicitly, ask the coding agent you already like to help fill the
+TODOs, and run the scan again. Harness Baby provides the first foothold and the feedback
+loop; it does not choose your agent or pretend unfinished controls already exist.
+
+It is not an AI agent and never calls an LLM. `scan` does not change source or
+configuration, install dependencies, run Terraform, or contact external services;
+its only repository write is the requested `.harness/report.yaml` artifact. The
+separate `init --apply` command writes only its reviewed generic skeleton into an
+empty target.
 
 ## Install
 
@@ -12,30 +24,51 @@ After the first PyPI release, install the CLI in an isolated environment with
 [`pipx`](https://pipx.pypa.io/):
 
 ```bash
-pipx install harness-doctor --python python3.12
+pipx install harness-baby --python python3.12
 ```
 
 Upgrade or remove it with:
 
 ```bash
-pipx upgrade harness-doctor
-pipx uninstall harness-doctor
+pipx upgrade harness-baby
+pipx uninstall harness-baby
 ```
 
 Until the first release is published, use the development installation below.
 
 ## Usage
 
+### Start from an empty folder
+
+Preview a generic, agent-neutral harness without writing anything:
+
+```bash
+harness-baby init my-project --project-name "My Project"
+```
+
+Create the exact preview explicitly:
+
+```bash
+harness-baby init my-project --project-name "My Project" --apply
+```
+
+The bootstrap creates seven context and feedback files. It does not invent source
+code, tests, CI, dependencies, a license, or an architecture. See
+[`docs/bootstrap.md`](docs/bootstrap.md) for the novice walkthrough and conflict
+behavior.
+
+### Check readiness
+
 Scan the current directory:
 
 ```bash
-harness-doctor scan .
+harness-baby scan .
 ```
 
 Choose another report destination:
 
 ```bash
-harness-doctor scan /path/to/repository --output /tmp/report.yaml
+harness-baby scan /path/to/repository --output /tmp/report.yaml
 ```
 
 The command prints a compact summary and writes `<repository>/.harness/report.yaml` by default. Finding failed checks does not make the process fail; exit code `2` is reserved for invocation, path, or report-write errors.
@@ -47,7 +80,7 @@ Schema version 1 has five stable top-level fields. Evidence fields may grow as c
 ```yaml
 schema_version: 1
 tool:
-  name: harness-doctor
+  name: harness-baby
   version: 0.1.0
 project:
   path: .
@@ -89,9 +122,15 @@ Terraform commands are never executed. `terraform_binary_available` describes th
 
 ## Architecture
 
-`Scanner` performs bounded, sorted file discovery, detects stacks, and executes an ordered registry of `Check` implementations. A check receives an immutable `ScanContext` and returns a `CheckResult`; it does not mutate the repository. Adding a stack means adding checks under `src/harness_doctor/checks/` and registering them in `built_in_checks()`.
+`Scanner` performs bounded, sorted file discovery, detects stacks, and executes an ordered registry of `Check` implementations. A check receives an immutable `ScanContext` and returns a `CheckResult`; it does not mutate the repository. Adding a stack means adding checks under `src/harness_baby/checks/` and registering them in `built_in_checks()`.
 
 The score policy and YAML reporter are independent modules. YAML output preserves registry order and contains no timestamps, making repeated scans stable when repository and relevant tool availability are unchanged.
+
+`bootstrap.py` owns the generic template and separates deterministic planning from
+explicit application. It preflights every path before writing, refuses ownership
+ambiguity, and verifies the complete result after application. The maintained
+contract and stop conditions live in
+[`docs/specs/blank-folder-bootstrap.md`](docs/specs/blank-folder-bootstrap.md).
 
 ## Development
 
@@ -114,6 +153,12 @@ Release maintainers should follow [`docs/releasing.md`](docs/releasing.md).
 
 ## Roadmap
 
-After the MVP, likely additions are a versioned external plugin discovery contract, configurable check weights, optional report history, more robust workflow semantics, and support for Node.js, Go, Rust, Java, Docker, Kubernetes, and Ansible.
+After the generic bootstrap is proven, likely additions are a novice-friendly
+interactive flow, stack-specific templates, safe adoption into existing repositories,
+a versioned external plugin discovery contract, configurable check weights, optional
+report history, more robust workflow semantics, and support for Node.js, Go, Rust,
+Java, Docker, Kubernetes, and Ansible.
 
-Dynamic plugins, command execution, auto-fixes, historical reports, remote integrations, and exhaustive secret scanning are intentionally outside the MVP.
+Dynamic plugins, application-code generation, automatic remediation, external
+command execution, historical reports, remote integrations, and exhaustive secret
+scanning are intentionally outside the current scope.

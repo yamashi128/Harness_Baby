@@ -1,4 +1,4 @@
-# Releasing Harness Doctor
+# Releasing Harness Baby
 
 This document covers the human-reviewed path from a clean checkout to TestPyPI,
 PyPI, and eventual public repository visibility. Package publication, tag pushes,
@@ -6,7 +6,7 @@ and visibility changes always require explicit approval.
 
 ## 1. Prepare the release
 
-Start from a clean feature branch and update `src/harness_doctor/__init__.py` to
+Start from a clean feature branch and update `src/harness_baby/__init__.py` to
 the intended semantic version. The package metadata reads that value as its
 single version source.
 
@@ -18,15 +18,17 @@ uv run pytest
 uv run ruff check .
 uv run ruff format --check .
 uv run mypy
-uv run harness-doctor scan . --output /tmp/harness-doctor-release-report.yaml
+uv run harness-baby scan . --output /tmp/harness-baby-release-report.yaml
 uv run python -m build
 uv run twine check dist/*
 ```
 
-Inspect the source archive and wheel under `dist/`. Confirm that they contain
-only the package, metadata, README, and license material expected for the
-release. Install the wheel into a clean Python 3.12 environment and run a scan
-outside the source checkout.
+Inspect the source archive and wheel under `dist/`. Confirm that the source archive
+contains the package, metadata, README, license, tests, and maintained Markdown
+documentation, while the wheel contains only runtime package and metadata material.
+Install the wheel into a clean Python 3.12 environment. Outside the source checkout,
+preview and apply a blank-folder bootstrap, scan the generated repository, and
+confirm that a second apply is unchanged.
 
 ## 2. Configure Trusted Publishing
 
@@ -36,8 +38,8 @@ with these exact identities:
 
 | Index | Owner | Repository | Workflow | Environment |
 | --- | --- | --- | --- | --- |
-| TestPyPI | `yamashi128` | `Harness_Doctor` | `release.yml` | `testpypi` |
-| PyPI | `yamashi128` | `Harness_Doctor` | `release.yml` | `pypi` |
+| TestPyPI | `yamashi128` | `Harness_Baby` | `release.yml` | `testpypi` |
+| PyPI | `yamashi128` | `Harness_Baby` | `release.yml` | `pypi` |
 
 No PyPI API token belongs in GitHub secrets. The release workflow requests a
 short-lived OIDC credential with job-scoped `id-token: write` permission.
@@ -51,12 +53,12 @@ retry that needs a new distribution.
 Install the candidate in a clean environment, using PyPI for dependencies:
 
 ```bash
-python3.12 -m venv /tmp/harness-doctor-testpypi
-/tmp/harness-doctor-testpypi/bin/python -m pip install \
+python3.12 -m venv /tmp/harness-baby-testpypi
+/tmp/harness-baby-testpypi/bin/python -m pip install \
   --index-url https://test.pypi.org/simple/ \
   --extra-index-url https://pypi.org/simple/ \
-  harness-doctor
-/tmp/harness-doctor-testpypi/bin/harness-doctor --version
+  harness-baby
+/tmp/harness-baby-testpypi/bin/harness-baby --version
 ```
 
 Run a representative repository scan and inspect the generated schema version 1

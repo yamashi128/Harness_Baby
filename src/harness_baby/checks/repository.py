@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from harness_doctor.checks.base import Check
-from harness_doctor.models import CheckResult, ScanContext, Status
+from harness_baby.checks.base import Check
+from harness_baby.models import CheckResult, ScanContext, Status
 
 
 class RepositoryCheck(Check):

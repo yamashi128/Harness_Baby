@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from harness_doctor.models import Status
-from harness_doctor.scanner import Scanner
-from harness_doctor.scoring import calculate_score
+from harness_baby.models import Status
+from harness_baby.scanner import Scanner
+from harness_baby.scoring import calculate_score
 
 
 def write(root: Path, relative: str, content: str = "") -> None:
@@ -118,7 +118,7 @@ def test_missing_ci(tmp_path: Path) -> None:
 
 
 def test_score_ignores_skips_and_supports_weights() -> None:
-    from harness_doctor.models import CheckResult
+    from harness_baby.models import CheckResult
 
     results = [
         CheckResult("a", "a", Status.PASS),

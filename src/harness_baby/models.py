@@ -1,4 +1,4 @@
-"""Data models shared by scanners, checks, scoring, and reporters."""
+"""Data models shared by Harness Baby scanners, checks, scoring, and reporters."""
 
 from __future__ import annotations
 

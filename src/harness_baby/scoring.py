@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
 
-from harness_doctor.models import CheckResult, Status
+from harness_baby.models import CheckResult, Status
 
 STATUS_VALUES: Mapping[Status, float] = {
     Status.PASS: 1.0,
