@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "harness-baby"
 dynamic = ["version"]
-description = "Bootstrap and score a safe repository harness for coding agents"
+description = "Experimental CLI to bootstrap and score a repository harness for coding agents"
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"

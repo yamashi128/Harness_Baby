@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from harness_baby.cli import run
+from harness_baby.cli import build_parser, run
 
 
 def test_cli_writes_yaml_and_prints_summary(tmp_path: Path, capsys) -> None:  # type: ignore[no-untyped-def]
@@ -23,3 +23,10 @@ def test_cli_writes_yaml_and_prints_summary(tmp_path: Path, capsys) -> None:  # 
 def test_cli_rejects_missing_directory(tmp_path: Path, capsys) -> None:  # type: ignore[no-untyped-def]
     assert run(["scan", str(tmp_path / "missing")]) == 2
     assert "not a directory" in capsys.readouterr().err
+
+
+def test_cli_help_identifies_experimental_status() -> None:
+    help_text = build_parser().format_help()
+
+    assert "Experimental alpha software" in help_text
+    assert "use at your own risk" in help_text

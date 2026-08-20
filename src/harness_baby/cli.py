@@ -21,7 +21,14 @@ from harness_baby.scanner import Scanner
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="harness-baby")
+    parser = argparse.ArgumentParser(
+        prog="harness-baby",
+        description="Bootstrap and score a repository harness for coding agents.",
+        epilog=(
+            "Experimental alpha software: review generated content and diagnostic "
+            "results, and use at your own risk."
+        ),
+    )
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     subparsers = parser.add_subparsers(dest="command", required=True)
     scan_parser = subparsers.add_parser("scan", help="scan a repository without modifying it")

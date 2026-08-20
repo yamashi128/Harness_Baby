@@ -10,6 +10,15 @@ skeleton, create it explicitly, ask the coding agent you already like to help fi
 TODOs, and run the scan again. Harness Baby provides the first foothold and the feedback
 loop; it does not choose your agent or pretend unfinished controls already exist.
 
+## Project status
+
+Harness Baby is experimental alpha software, not a stable release or a guarantee that
+a repository is ready for production or unsupervised agent work. Use it at your own
+risk. Review the preview before running `init --apply`, keep the target under version
+control or backed up, and independently verify generated content, detected evidence,
+and scores before relying on them. The software is provided without warranty under the
+MIT License.
+
 It is not an AI agent and never calls an LLM. `scan` does not change source or
 configuration, install dependencies, run Terraform, or contact external services;
 its only repository write is the requested `.harness/report.yaml` artifact. The
@@ -20,7 +29,7 @@ empty target.
 
 Python 3.12 or newer is required.
 
-After the first PyPI release, install the CLI in an isolated environment with
+Install the released CLI in an isolated environment with
 [`pipx`](https://pipx.pypa.io/):
 
 ```bash
@@ -34,7 +43,7 @@ pipx upgrade harness-baby
 pipx uninstall harness-baby
 ```
 
-Until the first release is published, use the development installation below.
+For development from a source checkout, use the commands in the Development section.
 
 ## Usage
 
@@ -54,7 +63,8 @@ harness-baby init my-project --project-name "My Project" --apply
 
 The bootstrap creates seven context and feedback files. It does not invent source
 code, tests, CI, dependencies, a license, or an architecture. See
-[`docs/bootstrap.md`](docs/bootstrap.md) for the novice walkthrough and conflict
+[`docs/bootstrap.md`](https://github.com/yamashi128/Harness_Baby/blob/main/docs/bootstrap.md)
+for the novice walkthrough and conflict
 behavior.
 
 ### Check readiness
@@ -130,7 +140,7 @@ The score policy and YAML reporter are independent modules. YAML output preserve
 explicit application. It preflights every path before writing, refuses ownership
 ambiguity, and verifies the complete result after application. The maintained
 contract and stop conditions live in
-[`docs/specs/blank-folder-bootstrap.md`](docs/specs/blank-folder-bootstrap.md).
+[`docs/specs/blank-folder-bootstrap.md`](https://github.com/yamashi128/Harness_Baby/blob/main/docs/specs/blank-folder-bootstrap.md).
 
 ## Development
 
@@ -149,7 +159,8 @@ uv run twine check dist/*
 Without `uv`, create a Python 3.12 virtual environment and run
 `python -m pip install -e '.[dev]'` before invoking the tools directly.
 
-Release maintainers should follow [`docs/releasing.md`](docs/releasing.md).
+Release maintainers should follow
+[`docs/releasing.md`](https://github.com/yamashi128/Harness_Baby/blob/main/docs/releasing.md).
 
 ## Roadmap
 
