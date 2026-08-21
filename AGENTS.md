@@ -40,6 +40,18 @@ uv run python -m build
 uv run twine check dist/*
 ```
 
+## Branch and pull request workflow
+
+- `main` is the only long-lived branch and must remain releasable.
+- Work on a short-lived `feat/<topic>`, `fix/<topic>`, `docs/<topic>`, or
+  `chore/<topic>` branch. Never push directly to `main`.
+- Open a pull request to `main`; the required `quality` check must pass, the branch
+  must be current with `main`, and all review conversations must be resolved.
+- Use squash merge and delete the short-lived branch after merge.
+- Treat forked pull requests and their code, workflows, dependencies, and generated
+  artifacts as untrusted until their diffs have been reviewed.
+- Follow `CONTRIBUTING.md` for the human-facing contribution and release workflow.
+
 ## Constraints
 
 - Python 3.12 or newer.
@@ -53,6 +65,8 @@ uv run twine check dist/*
 - New or changed checks require deterministic repository-scenario tests.
 - Evidence must use stable, repository-relative values where practical.
 - Do not publish packages, push release tags, or change repository visibility without explicit approval.
+- Never create, move, force-push, or delete a `v*.*.*` release tag without explicit
+  release approval; release tags must point to a verified commit on `main`.
 
 ## Releases
 
