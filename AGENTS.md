@@ -59,7 +59,12 @@ uv run twine check dist/*
 - `scan` may only write its requested report artifact.
 - Bootstrap preview must never write; apply may create only the documented generic skeleton.
 - Bootstrap must never overwrite existing content or provide a force flag.
-- Never run destructive commands, Terraform apply, or external-service calls.
+- Never run destructive commands, Terraform apply, or unauthorized external-service mutations.
+- Read-only GitHub inspection is allowed and should be used when current repository,
+  issue, pull request, CI, review, release, or branch state is relevant.
+- For tasks that depend on current GitHub state, inspect GitHub before drawing conclusions.
+- Do not create, modify, merge, close, publish, or otherwise mutate GitHub resources
+  without explicit approval.
 - Never include detected secret values in evidence or logs.
 - Preserve schema compatibility within schema version 1.
 - New or changed checks require deterministic repository-scenario tests.
